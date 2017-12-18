@@ -10,11 +10,18 @@ import java.util.Random;
 /**
  * 生产者包括一个缓冲区池，它保存尚未发送到服务器的记录，以及一个后台I/O线程，负责将这些记录转换为请求并将其传输到集群。
  * 使用后未能关闭生产者将泄漏这些资源。
- *
- * http://blog.csdn.net/isea533/article/details/73822881
+ * kafka 客户端版本1.0.0
+ * http://blog.csdn.net/isea533/article/details/73822881  （有一定的参考意义)
  */
 public class KafkaPro {
-    private static String[] RandomString = new String[]{"hello", "kafka", "storm", "spark", "test message", "another test message"};
+    //    private static String[] RandomString = new String[]{"hello", "kafka", "storm", "spark", "test message", "another test message"};
+    private static String[] RandomString = new String[]{
+            "hello test test test2 test3 test4",
+            "kafka te",
+            "storm test",
+            "spark test45",
+            "test message tets",
+            "another test message"};
 
     public static void main(String[] args) {
         String topicName = args.length == 0 ? "toonew-topic" : args[0];

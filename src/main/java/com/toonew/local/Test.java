@@ -1,20 +1,17 @@
+package com.toonew.local;
+
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
-import org.apache.storm.testing.TestGlobalCount;
-import org.apache.storm.testing.TestWordCounter;
-import org.apache.storm.testing.TestWordSpout;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.utils.Utils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 最基本的 storm 流程
  * inputStream -->  spout -->  blot
  * 这里只有 输入 和 计算 的操作，怎么获取运算的结果嘞？
+ * LocalCluster  本地模式（在jvm 中模拟storm 集群运行）
  */
 public class Test {
 
@@ -24,12 +21,12 @@ public class Test {
             TopologyBuilder builder = new TopologyBuilder();
 
             //2.设置spout 和 bolt
-            builder.setSpout("1", new TestWordSpout(true), 5);
-            builder.setSpout("2", new TestWordSpout(true), 3);
-            builder.setBolt("3", new TestWordCounter(), 3)
+            builder.setSpout("1", new TestWord1Spout(true), 5);
+            builder.setSpout("2", new TestWord1Spout(true), 3);
+            builder.setBolt("3", new TestWordCounter1(), 3)
                     .fieldsGrouping("1", new Fields("word"))
                     .fieldsGrouping("2", new Fields("word"));
-            builder.setBolt("4", new TestGlobalCount())
+            builder.setBolt("4", new TestGlobalCount1())
                     .globalGrouping("1");
 
             //3.设置Config

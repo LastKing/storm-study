@@ -24,7 +24,6 @@ import java.util.Map;
  */
 public class DrpcTeset {
     public static void main(String[] args) {
-
         //创建一个本地drpc
         LocalDRPC drpc = new LocalDRPC();
 
