@@ -1,4 +1,4 @@
-package com.toonew.kafka;
+package com.toonew.kafka.blot;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -24,6 +24,7 @@ public class SplitBolt implements IRichBolt {
         String[] words = sentence.split(" ");
 
         for (String word : words) {
+            System.out.println("split world:" + word);
             word = word.toLowerCase();
             collector.emit(new Values(word));
         }

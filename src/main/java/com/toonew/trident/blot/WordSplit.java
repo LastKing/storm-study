@@ -1,4 +1,4 @@
-package com.toonew.kafka;
+package com.toonew.trident.blot;
 
 import org.apache.storm.trident.operation.BaseFunction;
 import org.apache.storm.trident.operation.TridentCollector;

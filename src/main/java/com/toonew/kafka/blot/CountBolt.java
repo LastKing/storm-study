@@ -1,4 +1,4 @@
-package com.toonew.kafka;
+package com.toonew.kafka.blot;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;

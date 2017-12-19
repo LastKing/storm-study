@@ -1,6 +1,7 @@
 package com.toonew.kafka;
 
-import com.toonew.test1.blot.WordCounter;
+import com.toonew.kafka.blot.SplitBolt;
+import com.toonew.kafka.blot.WordCounter;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.kafka.*;
@@ -15,10 +16,9 @@ import java.util.UUID;
  * 整合的例子
  * https://www.w3cschool.cn/apache_kafka/apache_kafka_integration_storm.html
  */
-public class Test {
-    private static String zkUrl = "192.168.71.25:2181,192.168.71.26:2181,192.168.71.27:2181";        // the defaults.
-    private static String brokerUrl = "192.168.71.25:9092,192.168.71.26:9092,192.168.71.27:9092";
-
+public class Standard {
+    private static String zkUrl = "192.168.71.25:2181,192.168.71.26:2181,192.168.71.27:2181";        // 测试服务器的
+    private static String brokerUrl = "192.168.71.25:9092,192.168.71.26:9092,192.168.71.27:9092";    // 测试服务器的kafka 地址
 
     public static void main(String[] args) throws Exception {
 
@@ -32,12 +32,11 @@ public class Test {
 
         Config config = new Config();
         config.setDebug(true);
-        config.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("kafka-storm-top", config, builder.createTopology());
 
-        Thread.sleep(1000);
+        Thread.sleep(10000);
         cluster.shutdown();
 
     }
@@ -47,9 +46,9 @@ public class Test {
      */
     private static KafkaSpout kaSpout() {
         //1.通过zookeeper 动态获取 kafka的信息
-        String zkUrl = "localhost:2181";//本地测试
+        String zkUrl = "127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183";//本地测试
 //        String zkUrl = "192.168.71.25:2181,192.168.71.26:2181,192.168.71.27:2181";
-        BrokerHosts hosts = new ZkHosts(zkUrl, "/brokers");
+        BrokerHosts hosts = new ZkHosts(zkUrl);
 
         String topicName = "toonew-topic";
 

@@ -29,6 +29,7 @@ public class TestDrpc {
 //        Config config = new Config();
 //        config.setDebug(true);
 //
+//        LocalDRPC drpc = new LocalDRPC();
 //        LocalCluster cluster = new LocalCluster();
 //        cluster.submitTopology("trident-study", config, topology.build());
 //

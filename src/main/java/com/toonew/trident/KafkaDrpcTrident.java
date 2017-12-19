@@ -1,7 +1,7 @@
-package com.toonew.kafka;
+package com.toonew.trident;
 
 import com.hazelcast.core.Hazelcast;
-import com.toonew.trident.Count;
+import com.toonew.trident.blot.WordSplit;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.LocalDRPC;
@@ -40,7 +40,7 @@ import java.util.Map;
  * trident 方式 实现
  * http://blog.csdn.net/jinhong_lu/article/details/46766195
  */
-public class Test2 {
+public class KafkaDrpcTrident {
 
     public static void main(String[] args) throws Exception {
 //        String kafkaZk = args[0];
@@ -57,14 +57,14 @@ public class Test2 {
             config.put(Config.NIMBUS_THRIFT_PORT, 6627);
             config.put(Config.STORM_ZOOKEEPER_PORT, 2181);
             config.put(Config.STORM_ZOOKEEPER_SERVERS, Arrays.asList(dockerIp));
-            StormSubmitter.submitTopology(name, config, Test2.buildTopology());
+            StormSubmitter.submitTopology(name, config, KafkaDrpcTrident.buildTopology());
         } else {
             LocalDRPC drpc = new LocalDRPC();
             config.setNumWorkers(2);
             config.setMaxTaskParallelism(2);
             config.setDebug(true);
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology("kafka", config, Test2.buildTopology(drpc));
+            cluster.submitTopology("kafka", config, KafkaDrpcTrident.buildTopology(drpc));
             while (true) {
                 System.out.println("Word count: " + drpc.execute("words", "the"));
                 Utils.sleep(1000);

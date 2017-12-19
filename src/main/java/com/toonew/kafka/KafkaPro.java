@@ -16,12 +16,12 @@ import java.util.Random;
 public class KafkaPro {
     //    private static String[] RandomString = new String[]{"hello", "kafka", "storm", "spark", "test message", "another test message"};
     private static String[] RandomString = new String[]{
-            "hello test test test2 test3 test4",
+            "the hello test test test2 test3 test4",
             "kafka te",
             "storm test",
-            "spark test45",
+            "spark the test45",
             "test message tets",
-            "another test message"};
+            "another the test message"};
 
     public static void main(String[] args) {
         String topicName = args.length == 0 ? "toonew-topic" : args[0];
