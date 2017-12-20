@@ -1,8 +1,7 @@
-package com.toonew.local;
+package com.toonew.demo1;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
-import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.utils.Utils;
@@ -27,7 +26,7 @@ public class Test {
                     .fieldsGrouping("1", new Fields("word"))
                     .fieldsGrouping("2", new Fields("word"));
             builder.setBolt("4", new TestGlobalCount1())
-                    .globalGrouping("1");
+                    .globalGrouping("3");
 
             //3.设置Config
             Config conf = new Config();

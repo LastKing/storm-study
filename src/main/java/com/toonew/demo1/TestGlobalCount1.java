@@ -1,4 +1,4 @@
-package com.toonew.local;
+package com.toonew.demo1;
 
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
@@ -25,6 +25,7 @@ public class TestGlobalCount1 extends BaseRichBolt {
     }
 
     public void execute(Tuple input) {
+        LOG.debug("globalCount1 : " + input.getString(0) + " " + _count);
         _count++;
         _collector.emit(input, new Values(_count));
         _collector.ack(input);

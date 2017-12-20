@@ -1,4 +1,4 @@
-package com.toonew.local;
+package com.toonew.demo1;
 
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.testing.TestWordCounter;

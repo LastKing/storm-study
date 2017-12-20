@@ -1,3 +1,5 @@
+package com.toonew.trident;
+
 import org.apache.storm.trident.TridentState;
 import org.apache.storm.trident.TridentTopology;
 import org.apache.storm.trident.operation.builtin.Count;
@@ -29,7 +31,6 @@ public class Test2 {
                 .groupBy(new Fields("word"))
                 .persistentAggregate(new MemoryMapState.Factory(), new Count(), new Fields("count"))
                 .parallelismHint(6);
-
 
     }
 

@@ -1,4 +1,4 @@
-package com.toonew.local;
+package com.toonew.demo1;
 
 import org.apache.storm.Config;
 import org.apache.storm.spout.SpoutOutputCollector;
