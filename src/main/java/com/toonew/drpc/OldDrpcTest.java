@@ -16,18 +16,19 @@ import java.security.InvalidParameterException;
 import java.util.Map;
 
 /**
- * 当前storm 版本1.1.0
+ * 当前storm 版本1.1.0 （这使用的api应该是更加古老的）
  * 例子出处：http://wiki.jikexueyuan.com/project/storm/topology.html
  * 详解 参考官方文档：
  * http://storm.apachecn.org/releases/cn/1.1.0/Distributed-RPC.html
- * 此例子为 本地模式，非remote 模式，如果远程需要开启服务器
+ * 此例子为 本地模式，非remote 模式，前提远程需要开启服务器
  */
-public class DrpcTeset {
+public class OldDrpcTest {
+
     public static void main(String[] args) {
         //创建一个本地drpc
         LocalDRPC drpc = new LocalDRPC();
 
-        //创建以topology
+        //创建以topology   ( LinearDRPCTopologyBuilder  帮助我们自动集成了DRPCSpout和returnResults(bolt) )
         LinearDRPCTopologyBuilder builder = new LinearDRPCTopologyBuilder("add");
         builder.addBolt(new AdderBolt(), 2);
 
@@ -39,8 +40,9 @@ public class DrpcTeset {
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("drpcder-topology", conf,
                 builder.createLocalTopology(drpc));//提交时，追加绑定的drpc
+//                builder.createRemoteTopology();//提交时，追加绑定的drpc
 
-        //通过drpc 发送需要计算的结果
+        //通过drpc 发送需要计算的数据，并获得结果
         String result = drpc.execute("add", "1+-1");
         System.out.println("add 1+-1:" + result);
 

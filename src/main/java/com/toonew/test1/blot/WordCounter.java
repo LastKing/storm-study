@@ -48,7 +48,6 @@ public class WordCounter implements IRichBolt {
         return null;
     }
 
-
     @Override
     public void execute(Tuple input) {
         String str = input.getString(0);

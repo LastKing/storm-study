@@ -37,26 +37,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * trident 方式 实现
+ * trident 集成 kafka drpc 实现
+ * 如果完全没入门请先参考standard1 （理解trident 和 drpc）
  * http://blog.csdn.net/jinhong_lu/article/details/46766195
  */
 public class KafkaDrpcTrident {
 
     public static void main(String[] args) throws Exception {
-//        String kafkaZk = args[0];
-
+        //1.storm 配置文件
         Config config = new Config();
         config.put(Config.TOPOLOGY_TRIDENT_BATCH_EMIT_INTERVAL_MILLIS, 2000);
 
-        if (args != null && args.length > 1) {
+        //2.根据 args 判断 remote model and local model  （drpc方法解释请看drpc package）
+        if (args.length > 1) {
             String name = args[1];
             String dockerIp = args[2];
             config.setNumWorkers(2);
             config.setMaxTaskParallelism(5);
+
             config.put(Config.NIMBUS_SEEDS, dockerIp);
             config.put(Config.NIMBUS_THRIFT_PORT, 6627);
             config.put(Config.STORM_ZOOKEEPER_PORT, 2181);
             config.put(Config.STORM_ZOOKEEPER_SERVERS, Arrays.asList(dockerIp));
+
             StormSubmitter.submitTopology(name, config, KafkaDrpcTrident.buildTopology());
         } else {
             LocalDRPC drpc = new LocalDRPC();
@@ -77,10 +80,17 @@ public class KafkaDrpcTrident {
         return buildTopology(null);
     }
 
+    /**
+     * 生成 topology ，根据不同drpc
+     *
+     * @param drpc 本地传入localDrpc   远程传入null即可
+     * @return stormTopology
+     */
     public static StormTopology buildTopology(LocalDRPC drpc) {
-        // 2、定义拓扑，进行单词统计后，写入一个分布式内存中。
+        // 2.定义拓扑，进行单词统计后，写入一个分布式内存中。
         TridentTopology topology = new TridentTopology();
 
+        // 3.将kafka作为spout 导入 数据，生成一个state 写入内存或者其他地方，方便后面的drpc 客户端进行查询
         TridentState wordCounts = topology.newStream("kaf-impt", kafImp())
                 .shuffle()
                 .each(new Fields("str"), new WordSplit(), new Fields("word"))
@@ -88,6 +98,7 @@ public class KafkaDrpcTrident {
                 .persistentAggregate(new HazelCastStateFactory(), new Count(), new Fields("aggregates_words"))
                 .parallelismHint(2);
 
+        // 4.生成客户端
         topology.newDRPCStream("words", drpc)
                 .each(new Fields("args"), new Split(), new Fields("word"))
                 .groupBy(new Fields("word"))
@@ -97,6 +108,7 @@ public class KafkaDrpcTrident {
         return topology.build();
     }
 
+    //使用将kafka作为转化成为输入流
     public static OpaqueTridentKafkaSpout kafImp() {
         BrokerHosts zk = new ZkHosts("localhost:2181");
         //1）首先定义一个kafka相关的配置对象，第一个参数是zookeeper的位置，第二个参数是订阅topic的名称，第三个参数是一个clientId
@@ -113,7 +125,6 @@ class HazelCastStateFactory implements StateFactory {
     public State makeState(Map conf, IMetricsContext metrics, int partitionIndex, int numPartitions) {
         return TransactionalMap.build(new HazelCastState(new HazelCastHandler()));
     }
-
 }
 
 class HazelCastHandler implements Serializable {
@@ -157,12 +168,11 @@ class HazelCastState<T> implements IBackingMap<TransactionalValue<Long>> {
         }
     }
 
-
     public List multiGet(List<List<Object>> keys) {
-        List<TransactionalValue<Long>> result = new ArrayList<TransactionalValue<Long>>(keys.size());
+        List<TransactionalValue<Long>> result = new ArrayList<>(keys.size());
         for (int i = 0; i < keys.size(); i++) {
             TridentTuple key = (TridentTuple) keys.get(i);
-            result.add(new TransactionalValue<Long>(0L, MapUtils.getLong(handler.getState(), key.getString(0), 0L)));
+            result.add(new TransactionalValue<>(0L, MapUtils.getLong(handler.getState(), key.getString(0), 0L)));
         }
         return result;
     }
