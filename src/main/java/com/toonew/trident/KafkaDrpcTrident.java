@@ -104,7 +104,7 @@ public class KafkaDrpcTrident {
                 .groupBy(new Fields("word"))
                 .stateQuery(wordCounts, new Fields("word"), new MapGet(), new Fields("count"))
                 .each(new Fields("count"), new FilterNull())
-                .aggregate(new Fields("count"), new Sum(), new Fields("sum"));
+                .aggregate(new Fields("count"), new Sum(), new Fields("sum"));    //persistentAggregate 和 aggregate   全局batch聚合  局部单个batch聚合
         return topology.build();
     }
 
