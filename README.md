@@ -1,6 +1,6 @@
 # storm学习文档
 
-## 一、最基本storm按理
+## 一、最基本storm案例
 **demo1**为最基本demo，可以本地随意运行不需要安装storm
 包含知识点：
 1. local model 这个就是一个本地 模拟的小型storm 加载在jvm中，不需要提交到storm中
