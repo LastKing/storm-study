@@ -58,7 +58,7 @@ public class Standard1 {
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology("trident-study", config, topology.build());
 
-        Thread.sleep(5000);
+        Thread.sleep(8000);
         //6.通过drpc execute 执行查询
         System.out.println("query key word by drpc:" + drpc.execute("words", "the cow"));//(function name,args)
         Thread.sleep(3000);

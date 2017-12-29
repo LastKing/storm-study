@@ -24,10 +24,11 @@ public class KafkaPro {
             "another the test message"};
 
     public static void main(String[] args) {
-        String topicName = args.length == 0 ? "toonew-topic" : args[0];
+        String topicName = args.length == 0 ? "toonew-test" : args[0];
 
         Properties props = new Properties();
-        props.put("bootstrap.servers", "127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094");
+//        props.put("bootstrap.servers", "127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094");
+        props.put("bootstrap.servers", "192.168.71.25:9092,192.168.71.26:9092,192.168.71.27:9092");
         props.put("ack", "all");              //acks配置其请求被视为完整性的标准,"all"意味着领导者将等待完整的同步副本来确认记录
         props.put("retries", 0);              //请求失败情况下 重试次数
         props.put("batch.size", 16384);       //维护每个分区的未发送出去的缓冲区
