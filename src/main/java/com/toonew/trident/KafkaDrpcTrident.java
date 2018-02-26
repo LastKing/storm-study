@@ -17,6 +17,7 @@ import org.apache.storm.spout.SchemeAsMultiScheme;
 import org.apache.storm.task.IMetricsContext;
 import org.apache.storm.trident.TridentState;
 import org.apache.storm.trident.TridentTopology;
+import org.apache.storm.trident.operation.builtin.Count;
 import org.apache.storm.trident.operation.builtin.FilterNull;
 import org.apache.storm.trident.operation.builtin.MapGet;
 import org.apache.storm.trident.operation.builtin.Sum;

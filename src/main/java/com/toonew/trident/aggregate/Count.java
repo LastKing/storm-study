@@ -1,4 +1,4 @@
-package com.toonew.trident;
+package com.toonew.trident.aggregate;
 
 import org.apache.storm.trident.operation.CombinerAggregator;
 import org.apache.storm.trident.tuple.TridentTuple;

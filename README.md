@@ -11,8 +11,16 @@ root@xxx> storm jar xxxx.jar com.xxx.xxx.TestTopology args1 args2 ....
 这两个区别很重要，千万别弄混了。。。本地调试的时候，都是本地虚拟的,远程模式需要将程序打包成jar，提交远端运行
 
 ## 二、基本结构
+1. spout
+2. blot
+3. state
+4. drpc
 
-
+1. 事务
+* [事务控制](http://www.bijishequ.com/detail/253539?p=)
+2. 关于聚合的资料  
+只是看过，但是很重要的
+* [persistentAggregate 方法详解](http://www.bijishequ.com/detail/314193)
 
 ## 三、stream group 模式
 * Shuffle Grouping 或 None Grouping  随机分发
