@@ -6,13 +6,12 @@ import org.apache.storm.trident.state.StateFactory;
 
 import java.util.Map;
 
-public class LocationFactory implements StateFactory {
+public class LocationDBFactory implements StateFactory {
 
     //获取state 实例
     @Override
     public State makeState(Map conf, IMetricsContext metrics, int partitionIndex, int numPartitions) {
         return new LocationDB();
     }
-
 
 }
