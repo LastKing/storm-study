@@ -92,7 +92,7 @@ public class KafkaDrpcTrident {
         TridentTopology topology = new TridentTopology();
 
         // 3.将kafka作为spout 导入 数据，生成一个state 写入内存或者其他地方，方便后面的drpc 客户端进行查询
-        TridentState wordCounts = topology.newStream("kaf-impt", kafImp())
+        TridentState wordCounts = topology.newStream("kaf-impt", kafkaSpout())
                 .shuffle()
                 .each(new Fields("str"), new WordSplit(), new Fields("word"))
                 .groupBy(new Fields("word"))
@@ -110,14 +110,21 @@ public class KafkaDrpcTrident {
     }
 
     //使用将kafka作为转化成为输入流
-    public static OpaqueTridentKafkaSpout kafImp() {
+    public static OpaqueTridentKafkaSpout kafkaSpout() {
         BrokerHosts zk = new ZkHosts("localhost:2181");
         //1）首先定义一个kafka相关的配置对象，第一个参数是zookeeper的位置，第二个参数是订阅topic的名称，第三个参数是一个clientId
-        TridentKafkaConfig spoutConf = new TridentKafkaConfig(zk, "toonew-topic");
+        TridentKafkaConfig kSpoutConf = new TridentKafkaConfig(zk, "toonew-topic");
         //2）然后对配置进行一些设置，包括一些起始位置之类的，后面再补充具体的配置介绍。
-        spoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());
+        kSpoutConf.scheme = new SchemeAsMultiScheme(new StringScheme());  //设置从kafka收到待处理的信息字节，并处理需要的格式，返回字段
+
+        //设置从kafka 读取数据的起始点（3种）
+        kSpoutConf.startOffsetTime = kafka.api.OffsetRequest.EarliestTime(); //从最早的消息开始，相当于从数组[0,1,2,3,..,n]中0开始
+        kSpoutConf.startOffsetTime = kafka.api.OffsetRequest.LatestTime();   //从最新的消息开始，相当于从数据[0,1,2,3,..,n]中n开始
+        //第三种，zookeeper存在偏移信息时，以zookeeper中的offset信息为准，即类似的文档中说的unix时间戳方式
+        kSpoutConf.ignoreZkOffsets = false;
+
         //3）创建一个spout，这里的spout是事务型的，也就是保证每一个
-        return new OpaqueTridentKafkaSpout(spoutConf);
+        return new OpaqueTridentKafkaSpout(kSpoutConf);
     }
 }
 
@@ -169,6 +176,7 @@ class HazelCastState<T> implements IBackingMap<TransactionalValue<Long>> {
         }
     }
 
+    @Override
     public List multiGet(List<List<Object>> keys) {
         List<TransactionalValue<Long>> result = new ArrayList<>(keys.size());
         for (int i = 0; i < keys.size(); i++) {

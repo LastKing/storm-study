@@ -39,3 +39,21 @@ work 产生 executors 产生task
 其中state包含以下操作：
 * update  (partition不会自动，persistent会自动保存，描述的好像有问题，具体看文档）
 * get/query
+
+
+# trident kafka 结合
+[官方文档](https://github.com/apache/storm/tree/master/external/storm-kafka)<br/>
+[官方文档民间翻译--中间可能有错误，需要注意](http://blog.csdn.net/jinhong_lu/article/details/46766195)<br/>
+
+配置kafka，生成spout，设置事务等级
+1. schema 设置kafka消息的处理模式
+2. offset 存储和恢复kafka topic的偏移量
+    * 最早      --   0
+    * 最新      --   last
+    * unix时间戳 --  zookeeper   （不知道我这么理解的又没有错误）
+    * 以unix时间戳格式优先级最高，每次都会默认调用zookeeper中的offset，如果存在的话。
+    依据，官方文档how KafkaSpout stores offset of a kafka topic and recovers in case of failures?
+    这已大段，[民间翻译](https://ask.helplib.com/storm/post_4470919)
+3. 因为offset信息保存在zookeeper的`SpoutConfig.zkRoot+ "/" + SpoutConfig.id`路径下，
+所以在重启topology时，需要保证`SpoutConfig.zkRoot` and `SpoutConfig.id`
+4. 还有ignoreZkOffsets 是否跳过zkOffset
