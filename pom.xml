@@ -98,6 +98,28 @@
             <version>1.1.1</version>
         </dependency>
 
+        <!-- 这是storm 几个state的实现,从他们中间学习经验 -->
+        <!--<dependency>-->
+            <!--<groupId>com.twitter</groupId>-->
+            <!--<artifactId>finagle-memcached_2.9.2</artifactId>-->
+            <!--<version>6.20.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>com.twitter</groupId>-->
+            <!--<artifactId>util-core_2.11</artifactId>-->
+            <!--<version>6.30.0</version>-->
+        <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.storm</groupId>-->
+            <!--<artifactId>storm-redis</artifactId>-->
+            <!--<version>1.1.1</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.storm</groupId>-->
+            <!--<artifactId>storm-mongodb</artifactId>-->
+            <!--<version>1.2.1</version>-->
+        <!--</dependency>-->
+
     </dependencies>
 
 

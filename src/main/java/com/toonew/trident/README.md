@@ -40,6 +40,9 @@ work 产生 executors 产生task
 * update  (partition不会自动，persistent会自动保存，描述的好像有问题，具体看文档）
 * get/query
 
+storm的state在看完官方文档后可以参考，mongo，redis，memcached实现，了解state的基本套路。
+区分清楚state,mapState,IBackingMap,SnapshottableMap等等的关系。
+
 
 # trident kafka 结合
 [官方文档](https://github.com/apache/storm/tree/master/external/storm-kafka)<br/>
