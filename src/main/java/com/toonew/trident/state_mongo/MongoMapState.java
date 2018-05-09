@@ -52,22 +52,21 @@ public class MongoMapState<T> implements IBackingMap<T> {
     public List<T> multiGet(List<List<Object>> keys) {
         List<T> retval = new ArrayList<>();
         byte[] ObjId;
-        String str_objid;
+        String str_objId;
         Document value;
         Document doc = new Document();
 
         for (List<Object> key : keys) {
             doc.clear();
             ObjId = getObjectId(key);
-            str_objid = Base64.encodeBase64String(ObjId);       //将对象解析为base64
-            doc.put("_id", str_objid);
+            str_objId = Base64.encodeBase64String(ObjId);       //将对象解析为base64
+            doc.put("_id", str_objId);
             value = mongo_Client_coll.find(doc).first();
 
-            if (value != null) {
+            if (value != null)
                 retval.add(this.serializer.deserialize(value.getString("value").getBytes()));
-            } else {
+            else
                 retval.add(null);
-            }
         }
 
         return retval;
@@ -91,10 +90,10 @@ public class MongoMapState<T> implements IBackingMap<T> {
             ObjId = getObjectId(keys.get(i)); //获取保存在mongo中的唯一ID
             filter = Filters.eq("_id", Base64.encodeBase64String(ObjId));//获取要替换的ID
 
-            String tt_base64 = new String(this.serializer.serialize(vals.get(i)));
+            String valueSer = new String(this.serializer.serialize(vals.get(i)));
             doc.append("_id", Base64.encodeBase64String(ObjId));
             doc.append("name", keys.get(i).get(0).toString());
-            doc.append("value", tt_base64);
+            doc.append("value", valueSer);
             mongo_Client_coll.replaceOne(filter, doc, options);
         }
     }
