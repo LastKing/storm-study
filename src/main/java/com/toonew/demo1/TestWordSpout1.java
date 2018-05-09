@@ -16,16 +16,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class TestWord1Spout extends BaseRichSpout {
+public class TestWordSpout1 extends BaseRichSpout {
     public static Logger LOG = LoggerFactory.getLogger(TestWordSpout.class);
+
     private boolean _isDistributed;
     private SpoutOutputCollector _collector;
 
-    public TestWord1Spout() {
+    public TestWordSpout1() {
         this(true);
     }
 
-    public TestWord1Spout(boolean isDistributed) {
+    public TestWordSpout1(boolean isDistributed) {
         _isDistributed = isDistributed;
     }
 

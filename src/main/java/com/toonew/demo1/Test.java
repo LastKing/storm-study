@@ -8,6 +8,7 @@ import org.apache.storm.utils.Utils;
 
 /**
  * 最基本的 storm 流程
+ * 标准的 spout blot 模式 ，需要自己处理emit，ack，fail 等
  * inputStream -->  spout -->  blot
  * 这里只有 输入 和 计算 的操作，怎么获取运算的结果嘞？
  * LocalCluster  本地模式（在jvm 中模拟storm 集群运行）
@@ -20,8 +21,8 @@ public class Test {
             TopologyBuilder builder = new TopologyBuilder();
 
             //2.设置spout 和 bolt
-            builder.setSpout("1", new TestWord1Spout(true), 5);
-            builder.setSpout("2", new TestWord1Spout(true), 3);
+            builder.setSpout("1", new TestWordSpout1(), 5);
+            builder.setSpout("2", new TestWordSpout1(true), 3);
             builder.setBolt("3", new TestWordCounter1(), 3)
                     .fieldsGrouping("1", new Fields("word"))
                     .fieldsGrouping("2", new Fields("word"));
