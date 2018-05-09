@@ -165,7 +165,6 @@ public class MongoBackingMapState<T> implements Snapshottable<T>, ITupleCollecti
                 value = mongo_Client_coll.find(doc).first();
 
                 if (value != null) {
-//                de_mon = Base64.decodeBase64(value.getString(key.get(0)));
                     de_mon = Base64.decodeBase64(value.getString("value"));
                     retval.add(this.serializer.deserialize(de_mon));
                 } else {

@@ -1,7 +1,7 @@
 package com.toonew.trident;
 
 import com.toonew.trident.aggregate.Count;
-import com.toonew.trident.state_mongo.MongoBackingMap;
+import com.toonew.trident.state_mongo.MongoMapState;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.LocalDRPC;
@@ -45,7 +45,7 @@ public class Standard3 {
                 topology.newStream("spout1", spout)
                         .each(new Fields("sentence"), new Split(), new Fields("word"))
                         .groupBy(new Fields("word"))
-                        .persistentAggregate(new MongoBackingMap.Factory(), new Count(), new Fields("count"))         //mongo 的 opaque 处理方式
+                        .persistentAggregate(new MongoMapState.Factory(), new Count(), new Fields("count"))         //mongo 的 opaque 处理方式
 //                        .persistentAggregate(RedisMapState.opaque(jedisPoolConfig, options), new Count(), new Fields("count"))   //redis 的 opaque 处理方式
 //                        .persistentAggregate(RedisMapState.nonTransactional(jedisPoolConfig, options), new Count(), new Fields("count")) //redis no-transaction 处理
                         .parallelismHint(6);

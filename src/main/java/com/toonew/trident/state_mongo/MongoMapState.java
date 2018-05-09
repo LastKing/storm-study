@@ -22,12 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class MongoBackingMap<T> implements IBackingMap<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(MongoBackingMap.class);
+public class MongoMapState<T> implements IBackingMap<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(MongoMapState.class);
 
     static MongoCollection<Document> mongo_Client_coll;
 
-    private int partitionNum;
     private Serializer<T> serializer;
 
     private static final Map<StateType, Serializer> DEFAULT_SERIALIZERS = Maps.newHashMap();
@@ -38,9 +37,8 @@ public class MongoBackingMap<T> implements IBackingMap<T> {
         DEFAULT_SERIALIZERS.put(StateType.OPAQUE, new JSONOpaqueSerializer());
     }
 
-    public MongoBackingMap(final Options<T> options, Map conf, int partitionNum) {
+    public MongoMapState(final Options<T> options, Map conf) {
         this.serializer = options.serializer;
-        this.partitionNum = partitionNum;
         mongo_Client_coll = MongoSspUtil.instance.getCollection("mongo_compute", "imp_counter");
     }
 
@@ -77,7 +75,7 @@ public class MongoBackingMap<T> implements IBackingMap<T> {
 
     @Override
     public void multiPut(List<List<Object>> keys, List<T> vals) {
-        byte[] ObjId, ser_dev;
+        byte[] ObjId;
         Bson filter;
 
         UpdateOptions options = new UpdateOptions();
@@ -93,8 +91,6 @@ public class MongoBackingMap<T> implements IBackingMap<T> {
             ObjId = getObjectId(keys.get(i)); //获取保存在mongo中的唯一ID
             filter = Filters.eq("_id", Base64.encodeBase64String(ObjId));//获取要替换的ID
 
-//            ser_dev = this.serializer.serialize(vals.get(i));
-//            tt_base64 = Base64.encodeBase64String(ser_dev);
             String tt_base64 = new String(this.serializer.serialize(vals.get(i)));
             doc.append("_id", Base64.encodeBase64String(ObjId));
             doc.append("name", keys.get(i).get(0).toString());
@@ -154,7 +150,7 @@ public class MongoBackingMap<T> implements IBackingMap<T> {
 
         @Override
         public State makeState(Map conf, IMetricsContext metrics, int partitionIndex, int numPartitions) {
-            IBackingMap state = new MongoBackingMap(this.options, conf, partitionIndex);
+            IBackingMap state = new MongoMapState(this.options, conf);
 
             state = new CachedMap(state, 5000);
 
